@@ -7,6 +7,8 @@ import ContactPage from "./pages/contact";
 import BookPage from "./pages/book";
 import Home from "./components/Home";
 import Footer from "./components/Footer";
+import RegisterPage from "./pages/register";
+import "./styles/reset.scss";
 const Layout = () => {
   return (
     <div className="layout-app">
@@ -38,6 +40,10 @@ export default function App() {
     {
       path: "/login",
       element: <LoginPage />,
+    },
+    {
+      path: "/register",
+      element: <RegisterPage />,
     },
   ]);
   return (
