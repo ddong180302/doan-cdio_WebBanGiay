@@ -16,12 +16,28 @@ import Loading from "./components/Loading";
 import NotFound from "./components/NotFound";
 import AdminPage from "./pages/admin";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 const Layout = () => {
   return (
     <div className="layout-app">
       <Header />
       <Outlet />
       <Footer />
+    </div>
+  );
+};
+
+const LayoutAdmin = () => {
+  const isAdminRoute = window.location.pathname.startsWith("/admin");
+  const user = useSelector((state) => state.account.user);
+  const userRole = user.role;
+  return (
+    <div className="layout-app">
+      {isAdminRoute && userRole === "ADMIN" && <Header />}
+      {/* <Header /> */}
+      <Outlet />
+      {/* <Footer /> */}
+      {isAdminRoute && userRole === "ADMIN" && <Footer />}
     </div>
   );
 };
@@ -33,7 +49,8 @@ export default function App() {
   const getAccount = async () => {
     if (
       window.location.pathname === "/login" ||
-      window.location.pathname === "/admin"
+      window.location.pathname === "/register" ||
+      window.location.pathname === "/"
     )
       return;
     const res = await callFetchAccount();
@@ -41,9 +58,11 @@ export default function App() {
       dispatch(doGetAccountAction(res.data));
     }
   };
+
   useEffect(() => {
     getAccount();
   }, []);
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -63,7 +82,7 @@ export default function App() {
     },
     {
       path: "/admin",
-      element: <Layout />,
+      element: <LayoutAdmin />,
       errorElement: <NotFound />,
       children: [
         {
@@ -93,11 +112,13 @@ export default function App() {
       element: <RegisterPage />,
     },
   ]);
+
   return (
     <>
       {isAuthenticated === true ||
       window.location.pathname === "/login" ||
-      window.location.pathname === "/admin" ? (
+      window.location.pathname === "/register" ||
+      window.location.pathname === "/" ? (
         <RouterProvider router={router} />
       ) : (
         <Loading />
