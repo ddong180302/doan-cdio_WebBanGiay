@@ -1,0 +1,60 @@
+:root {
+    --color-white: #ffffff;
+    --color-light: #f1f5f9;
+    --color-black: #121212;
+    --color-night: #001632;
+
+    --color-red    : #f44336;
+    --color-blue   : #1a73e8;
+    --color-gray   : #80868b;
+    --color-grayish: #dadce0;
+
+    --shadow-normal: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+        0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.login-page {
+    color     : var(--color-black);
+    background: var(--color-light);
+
+    .container {
+        background     : var(--color-grayish);
+        height         : 100vh;
+        max-width      : 80rem;
+        min-height     : 100vh;
+        display        : flex;
+        align-items    : center;
+        justify-content: center;
+
+        .text {
+            font-family   : inherit;
+            line-height   : inherit;
+            text-transform: unset;
+            text-rendering: optimizeLegibility;
+
+            &-heading {
+                font-size  : 24px;
+                font-weight: 600;
+                color      : var(--color-black);
+            }
+        }
+    }
+
+    .main {
+
+        .wrapper {
+            max-width    : 24rem;
+            width        : 100%;
+            margin       : 2rem auto;
+            background   : var(--color-white);
+            padding      : 2rem 2.5rem;
+            border-radius: 5px;
+            box-shadow   : var(--shadow-medium);
+        }
+
+    }
+}
