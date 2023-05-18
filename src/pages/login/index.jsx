@@ -1,9 +1,34 @@
-import { Button, Checkbox, Divider, Form, Input } from "antd";
+import { Button, Divider, Form, Input, message, notification } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.scss";
+import { callLogin } from "../../services/api";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { doLoginAction } from "../../redux/account/accountSlice";
 const LoginPage = () => {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const onFinish = async (values) => {
+    const { username, password } = values;
+    setIsLoading(true);
+    const res = await callLogin(username, password);
+    setIsLoading(false);
+    if (res?.data) {
+      localStorage.setItem("access_token", res.data.access_token);
+      dispatch(doLoginAction(res.data.user));
+      message.success("Đăng nhập tài khoản thành công!");
+      navigate("/");
+    } else {
+      notification.error({
+        message: "Có lỗi xảy ra",
+        description:
+          res.message && Array.isArray(res.message)
+            ? res.message[0]
+            : res.message,
+        duration: 5,
+      });
+    }
   };
   return (
     <div className="login-page">
@@ -18,7 +43,7 @@ const LoginPage = () => {
               <Form.Item
                 labelCol={{ span: 24 }}
                 label="Email"
-                name="email"
+                name="username"
                 rules={[
                   {
                     type: "email",
@@ -47,7 +72,7 @@ const LoginPage = () => {
                   className="text text-submit"
                   type="primary"
                   htmlType="submit"
-                  loading={false}
+                  loading={isLoading}
                 >
                   Submit
                 </Button>
