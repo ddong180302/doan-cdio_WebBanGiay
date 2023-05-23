@@ -16,6 +16,10 @@ import Loading from "./components/Loading";
 import NotFound from "./components/NotFound";
 import AdminPage from "./pages/admin";
 import ProtectedRoute from "./components/ProtectedRoute";
+import StaffPage from "./pages/staff";
+import LayoutAdmin from "./components/Admin/LayoutAdmin";
+import LayoutStaff from "./components/Staff/LayoutStaff";
+import ProtectedRouteStaff from "./components/ProtectedRoute/ProtectedRouteStaff";
 
 const Layout = () => {
   return (
@@ -23,21 +27,6 @@ const Layout = () => {
       <Header />
       <Outlet />
       <Footer />
-    </div>
-  );
-};
-
-const LayoutAdmin = () => {
-  const isAdminRoute = window.location.pathname.startsWith("/admin");
-  const user = useSelector((state) => state.account.user);
-  const userRole = user.role;
-  return (
-    <div className="layout-app">
-      {isAdminRoute && userRole === "ADMIN" && <Header />}
-      {/* <Header /> */}
-      <Outlet />
-      {/* <Footer /> */}
-      {isAdminRoute && userRole === "ADMIN" && <Footer />}
     </div>
   );
 };
@@ -90,6 +79,29 @@ export default function App() {
             <ProtectedRoute>
               <AdminPage />
             </ProtectedRoute>
+          ),
+        },
+        {
+          path: "user",
+          element: <ContactPage />,
+        },
+        {
+          path: "book",
+          element: <BookPage />,
+        },
+      ],
+    },
+    {
+      path: "/staff",
+      element: <LayoutStaff />,
+      errorElement: <NotFound />,
+      children: [
+        {
+          index: true,
+          element: (
+            <ProtectedRouteStaff>
+              <StaffPage />
+            </ProtectedRouteStaff>
           ),
         },
         {

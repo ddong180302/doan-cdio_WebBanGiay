@@ -10,9 +10,9 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const onFinish = async (values) => {
-    const { username, password } = values;
+    const { email, password } = values;
     setIsLoading(true);
-    const res = await callLogin(username, password);
+    const res = await callLogin(email, password);
     setIsLoading(false);
     if (res?.data) {
       localStorage.setItem("access_token", res.data.access_token);
@@ -43,7 +43,7 @@ const LoginPage = () => {
               <Form.Item
                 labelCol={{ span: 24 }}
                 label="Email"
-                name="username"
+                name="email"
                 rules={[
                   {
                     type: "email",

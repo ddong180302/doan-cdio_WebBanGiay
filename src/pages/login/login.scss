@@ -24,11 +24,12 @@
     .container {
         background     : var(--color-grayish);
         height         : 100vh;
-        max-width      : 80rem;
+        max-width      : 100rem;
         min-height     : 100vh;
         display        : flex;
         align-items    : center;
         justify-content: center;
+        margin         : 0 auto;
 
         .text {
             font-family   : inherit;
@@ -45,7 +46,6 @@
     }
 
     .main {
-
         .wrapper {
             max-width    : 24rem;
             width        : 100%;
