@@ -1,5 +1,11 @@
+import TableUser from "../../components/Admin/User/UserTable";
+
 const AdminPage = () => {
-  return <>admin pages</>;
+  return (
+    <>
+      <TableUser />
+    </>
+  );
 };
 
 export default AdminPage;

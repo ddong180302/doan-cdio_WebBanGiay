@@ -4,7 +4,7 @@ import LoginPage from "./pages/login";
 import Header from "./components/Header";
 import { Outlet } from "react-router-dom";
 import ContactPage from "./pages/contact";
-import BookPage from "./pages/book";
+import CategoryPage from "./pages/category";
 import Home from "./components/Home";
 import Footer from "./components/Footer";
 import RegisterPage from "./pages/register";
@@ -63,8 +63,8 @@ export default function App() {
           element: <ContactPage />,
         },
         {
-          path: "book",
-          element: <BookPage />,
+          path: "category",
+          element: <CategoryPage />,
         },
       ],
     },
@@ -86,8 +86,8 @@ export default function App() {
           element: <ContactPage />,
         },
         {
-          path: "book",
-          element: <BookPage />,
+          path: "category",
+          element: <CategoryPage />,
         },
       ],
     },
@@ -109,8 +109,8 @@ export default function App() {
           element: <ContactPage />,
         },
         {
-          path: "book",
-          element: <BookPage />,
+          path: "category",
+          element: <CategoryPage />,
         },
       ],
     },

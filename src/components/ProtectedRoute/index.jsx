@@ -14,18 +14,6 @@ const RoleBaseRoute = (props) => {
   }
 };
 
-const RoleStaffRoute = (props) => {
-  const isStaffRoute = window.location.pathname.startsWith("/staff");
-  const user = useSelector((state) => state.account.user);
-  const userRole = user.role;
-
-  if (isStaffRoute && userRole === "STAFF") {
-    return <>{props.children}</>;
-  } else {
-    return <NotPermitted />;
-  }
-};
-
 const ProtectedRoute = (props) => {
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
 
@@ -33,7 +21,6 @@ const ProtectedRoute = (props) => {
     <>
       {isAuthenticated === true ? (
         <>
-          <RoleStaffRoute>{props.children}</RoleStaffRoute>
           <RoleBaseRoute>{props.children}</RoleBaseRoute>
         </>
       ) : (
