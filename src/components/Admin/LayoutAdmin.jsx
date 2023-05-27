@@ -104,7 +104,7 @@ const LayoutAdmin = () => {
         />
       </Sider>
       <Layout>
-        <div className="admin-header">
+        <div className="admin-header" style={{ paddingRight: "50px" }}>
           <span>
             {React.createElement(
               collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
@@ -126,7 +126,7 @@ const LayoutAdmin = () => {
         <Content>
           <Outlet />
         </Content>
-        <Footer style={{ padding: 0 }}>
+        <Footer style={{ padding: 0, textAlign: "center" }}>
           Đồ Án Cdio &copy; Nhóm - Made with <HeartTwoTone />
         </Footer>
       </Layout>
