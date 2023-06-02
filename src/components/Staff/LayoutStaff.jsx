@@ -27,25 +27,13 @@ const items = [
     icon: <AppstoreOutlined />,
   },
   {
-    label: <span>Manage Users</span>,
-    // key: 'user',
-    icon: <UserOutlined />,
-    children: [
-      {
-        label: <Link to="/staff/user">CRUD</Link>,
-        key: "crud",
-        icon: <TeamOutlined />,
-      },
-      {
-        label: "Files1",
-        key: "file1",
-        icon: <TeamOutlined />,
-      },
-    ],
+    label: <Link to="/staff/product">Manage product</Link>,
+    key: "product",
+    icon: <ExceptionOutlined />,
   },
   {
-    label: <Link to="/staff/product">Manage Categories</Link>,
-    key: "product",
+    label: <Link to="/staff/category">Manage Categories</Link>,
+    key: "category",
     icon: <ExceptionOutlined />,
   },
   {

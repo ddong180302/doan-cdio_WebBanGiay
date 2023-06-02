@@ -28,7 +28,7 @@ const items = [
   },
   {
     label: <span>Manage Users</span>,
-    // key: 'user',
+    // key: "user",
     icon: <UserOutlined />,
     children: [
       {
@@ -44,7 +44,12 @@ const items = [
     ],
   },
   {
-    label: <Link to="/admin/product">Manage Categories</Link>,
+    label: <Link to="/admin/category">Manage Categories</Link>,
+    key: "category",
+    icon: <ExceptionOutlined />,
+  },
+  {
+    label: <Link to="/admin/product">Manage product</Link>,
     key: "product",
     icon: <ExceptionOutlined />,
   },

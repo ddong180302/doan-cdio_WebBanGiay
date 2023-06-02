@@ -20,6 +20,8 @@ import StaffPage from "./pages/staff";
 import LayoutAdmin from "./components/Admin/LayoutAdmin";
 import LayoutStaff from "./components/Staff/LayoutStaff";
 import ProtectedRouteStaff from "./components/ProtectedRoute/ProtectedRouteStaff";
+import ProductPage from "./pages/product";
+import OrderPage from "./pages/order";
 
 const Layout = () => {
   return (
@@ -56,17 +58,7 @@ export default function App() {
       path: "/",
       element: <Layout />,
       errorElement: <NotFound />,
-      children: [
-        { index: true, element: <Home /> },
-        {
-          path: "contact",
-          element: <ContactPage />,
-        },
-        {
-          path: "category",
-          element: <CategoryPage />,
-        },
-      ],
+      children: [{ index: true, element: <Home /> }],
     },
     {
       path: "/admin",
@@ -89,6 +81,15 @@ export default function App() {
           path: "category",
           element: <CategoryPage />,
         },
+        {
+          path: "product",
+          element: <ProductPage />,
+        },
+        ,
+        {
+          path: "order",
+          element: <OrderPage />,
+        },
       ],
     },
     {
@@ -103,10 +104,6 @@ export default function App() {
               <StaffPage />
             </ProtectedRouteStaff>
           ),
-        },
-        {
-          path: "user",
-          element: <ContactPage />,
         },
         {
           path: "category",

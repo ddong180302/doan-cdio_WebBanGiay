@@ -16,15 +16,17 @@ const RoleStaffRoute = (props) => {
 
 const ProtectedRouteStaff = (props) => {
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
-
+  const isStaffRoute = window.location.pathname.startsWith("/staff");
+  const user = useSelector((state) => state.account.user);
+  const userRole = user.role;
   return (
     <>
-      {isAuthenticated === true ? (
+      {isAuthenticated === true && userRole === "STAFF" ? (
         <>
           <RoleStaffRoute>{props.children}</RoleStaffRoute>
         </>
       ) : (
-        <Navigate to="/login" replace />
+        <Navigate to="/" replace />
       )}
     </>
   );

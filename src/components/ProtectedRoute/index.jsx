@@ -16,15 +16,17 @@ const RoleBaseRoute = (props) => {
 
 const ProtectedRoute = (props) => {
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
-
+  const isAdminRoute = window.location.pathname.startsWith("/admin");
+  const user = useSelector((state) => state.account.user);
+  const userRole = user.role;
   return (
     <>
-      {isAuthenticated === true ? (
+      {isAuthenticated === true && userRole === "ADMIN" ? (
         <>
           <RoleBaseRoute>{props.children}</RoleBaseRoute>
         </>
       ) : (
-        <Navigate to="/login" replace />
+        <Navigate to="/" replace />
       )}
     </>
   );

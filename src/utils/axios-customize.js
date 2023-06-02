@@ -29,11 +29,15 @@ const NO_RETRY_HEADER = 'x-no-retry';
 instance.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
+    console.log(response);
     return response && response.data ? response.data : response;
+
 }, async function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     if (error.config && error.response && +error.response.status === 401 && !error.config.headers[NO_RETRY_HEADER]) {
+        console.log(error.response);
+
         const access_token = await handleRefreshToken();
         error.config.headers[NO_RETRY_HEADER] = 'true'
         if (access_token) {

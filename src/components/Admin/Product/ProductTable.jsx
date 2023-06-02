@@ -1,22 +1,17 @@
-import { Col, Row, Table, Button, Popconfirm } from "antd";
+import { Col, Row, Table, Button } from "antd";
 import InputSearch from "./InputSearch";
 import { useEffect, useState } from "react";
 import { callFetchListUser } from "../../../services/api";
-import UserViewDetail from "./UserViewDetail";
+import ProductViewDetail from "./ProductViewDetail";
 import {
   CloudUploadOutlined,
-  DeleteTwoTone,
-  EditTwoTone,
   ExportOutlined,
   PlusOutlined,
   ReloadOutlined,
 } from "@ant-design/icons";
-import ModalCreateNewUser from "./ModalCreateNewUser";
-import UserImport from "./data/UserImport";
-import * as XLSX from "xlsx";
-import UserModalUpdate from "./UserModalUpdate";
+import ModalCreateNewProduct from "./ModalCreateNewProduct";
 
-const TableUser = (props) => {
+const ProductTable = (props) => {
   const [listUser, setListUser] = useState([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(4);
@@ -27,9 +22,6 @@ const TableUser = (props) => {
   const [dataViewDetail, setDataViewDetail] = useState("");
   const [openViewDetail, setOpenViewDetail] = useState(false);
   const [openModalCreate, setOpenModalCreate] = useState(false);
-  const [openModalImport, setOpenModalImport] = useState(false);
-  const [openModalUpdate, setOpenModalUpdate] = useState(false);
-  const [dataUpdate, setDataUpadte] = useState("");
 
   useEffect(() => {
     fetchUser();
@@ -73,17 +65,27 @@ const TableUser = (props) => {
       },
     },
     {
-      title: "Tên hiển thị",
+      title: "Tên danh mục",
       dataIndex: "fullName",
       sorter: true,
     },
     {
-      title: "Email",
+      title: "Tên sản phẩm",
+      dataIndex: "fullName",
+      sorter: true,
+    },
+    {
+      title: "Giá",
       dataIndex: "email",
       sorter: true,
     },
     {
-      title: "Số điện thoại",
+      title: "Giá đã giảm",
+      dataIndex: "phone",
+      sorter: true,
+    },
+    {
+      title: "Mô tả",
       dataIndex: "phone",
       sorter: true,
     },
@@ -92,19 +94,14 @@ const TableUser = (props) => {
       render: (text, record, index) => {
         return (
           <>
-            <Popconfirm>
-              <span style={{ cursor: "pointer", margin: "0 20px" }}>
-                <DeleteTwoTone twoToneColor={"#ff4d4f"} />
-              </span>
-            </Popconfirm>
-            <EditTwoTone
-              twoToneColor={"#f57800"}
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                setOpenModalUpdate(true);
-                setDataUpadte(record);
-              }}
-            />
+            <Button
+              type="primary"
+              style={{ margin: "6px" }}
+              onClick={() => fetchUser()}
+            >
+              Delete
+            </Button>
+            <Button type="primary">Edit</Button>
           </>
         );
       },
@@ -134,20 +131,15 @@ const TableUser = (props) => {
   };
 
   const handleExportData = () => {
-    if (listUser.length > 0) {
-      const worksheet = XLSX.utils.json_to_sheet(listUser);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-      XLSX.writeFile(workbook, "ExportUser.csv");
-    }
+    alert("hihi");
   };
   const handleImportData = () => {
-    setOpenModalImport(true);
+    alert("hihi");
   };
   const renderHeader = () => {
     return (
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span>Table List Users</span>
+        <span>Bảng danh sách sản phẩm</span>
         <span style={{ display: "flex", gap: 15 }}>
           <Button
             icon={<ExportOutlined />}
@@ -215,33 +207,19 @@ const TableUser = (props) => {
           />
         </Col>
       </Row>
-      <UserViewDetail
+      <ProductViewDetail
         openViewDetail={openViewDetail}
         setOpenViewDetail={setOpenViewDetail}
         dataViewDetail={dataViewDetail}
         setDataViewDetail={setDataViewDetail}
       />
-      <ModalCreateNewUser
+      <ModalCreateNewProduct
         openModalCreate={openModalCreate}
         setOpenModalCreate={setOpenModalCreate}
         fetchUser={fetchUser}
-      />
-
-      <UserImport
-        openModalImport={openModalImport}
-        setOpenModalImport={setOpenModalImport}
-        fetchUser={fetchUser}
-      />
-
-      <UserModalUpdate
-        openModalUpdate={openModalUpdate}
-        setOpenModalUpdate={setOpenModalUpdate}
-        dataUpdate={dataUpdate}
-        fetchUser={fetchUser}
-        setDataUpadte={setDataUpadte}
       />
     </>
   );
 };
 
-export default TableUser;
+export default ProductTable;

@@ -86,6 +86,14 @@ const LoginPage = () => {
                   </span>
                 </p>
               </div>
+              <div>
+                <p className="text text-login">
+                  Quên mật khẩu ?
+                  <span>
+                    <Link to={"/register"}> Quên mật khẩu</Link>
+                  </span>
+                </p>
+              </div>
             </Form>
           </section>
         </div>
