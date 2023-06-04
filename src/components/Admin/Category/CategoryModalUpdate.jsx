@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Divider, Form, Modal, message, notification, Input } from "antd";
-import { callUpdateUser } from "../../../services/api";
+import { callUpdateCategory } from "../../../services/api";
 
-const UserModalUpdate = (props) => {
+const CategoryModalUpdate = (props) => {
   const [form] = Form.useForm();
-  const { openModalUpdate, setOpenModalUpdate, dataUpdate } = props;
+  const { openModalUpdate, setOpenModalUpdate, dataUpdate, setDataUpdate } =
+    props;
   const [isSubmit, setIsSubmit] = useState(false);
   const onFinish = async (values) => {
-    const { id, fullName, phone } = values;
+    const { name } = values;
     setIsSubmit(true);
-    const res = await callUpdateUser(id, fullName, phone);
+    const res = await callUpdateCategory(name);
     if (res && res.data) {
-      message.success("Cập nhật user thành công");
+      message.success("Cập nhật danh mục thành công");
       setOpenModalUpdate(false);
       await props.fetchUser();
     } else {
@@ -30,7 +31,7 @@ const UserModalUpdate = (props) => {
   return (
     <>
       <Modal
-        title="Cập nhật người dùng"
+        title="Cập nhật danh mục"
         open={openModalUpdate}
         onOk={() => {
           form.submit();
@@ -57,40 +58,9 @@ const UserModalUpdate = (props) => {
           </Form.Item>
           <Form.Item
             labelCol={{ span: 24 }}
-            label="Tên hiển thị"
-            name="fullName"
-            rules={[{ required: true, message: "Vui lòng nhập tên hiển thị!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            labelCol={{ span: 24 }}
-            label="Email"
-            name="email"
-            rules={[
-              {
-                type: "email",
-                message: "E-mail bạn nhập không đúng định dạng!",
-              },
-              {
-                required: true,
-                message: "Vui lòng nhập E-mail!",
-              },
-            ]}
-          >
-            <Input disabled />
-          </Form.Item>
-
-          <Form.Item
-            labelCol={{ span: 24 }}
-            label="Số điện thoại"
-            name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập số điện thoại!",
-              },
-            ]}
+            label="Tên danh mục"
+            name="name"
+            rules={[{ required: true, message: "Vui lòng nhập tên danh mục!" }]}
           >
             <Input />
           </Form.Item>
@@ -100,4 +70,4 @@ const UserModalUpdate = (props) => {
   );
 };
 
-export default UserModalUpdate;
+export default CategoryModalUpdate;

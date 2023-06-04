@@ -22,6 +22,7 @@ import LayoutStaff from "./components/Staff/LayoutStaff";
 import ProtectedRouteStaff from "./components/ProtectedRoute/ProtectedRouteStaff";
 import ProductPage from "./pages/product";
 import OrderPage from "./pages/order";
+import LayoutUser from "./components/User/LayoutUser";
 
 const Layout = () => {
   return (
@@ -110,6 +111,21 @@ export default function App() {
           element: <CategoryPage />,
         },
       ],
+    },
+    {
+      path: "/user",
+      element: <LayoutUser />,
+      errorElement: <NotFound />,
+      // children: [
+      //   {
+      //     index: true,
+      //     element: (
+      //       <ProtectedRouteStaff>
+      //         <StaffPage />
+      //       </ProtectedRouteStaff>
+      //     ),
+      //   },
+      // ],
     },
     {
       path: "/login",

@@ -30,7 +30,7 @@ const Header = () => {
 
   let items = [
     {
-      label: <label style={{ cursor: "pointer" }}>Quản lý tài khoản</label>,
+      label: <Link to="/user">Quản lý tài khoản</Link>,
       key: "account",
     },
     {

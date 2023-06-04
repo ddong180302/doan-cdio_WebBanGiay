@@ -1,5 +1,11 @@
+import CategoryTable from "../../components/Admin/Category/CategoryTable";
+
 const CategoryPage = () => {
-  return <>CategoryPage</>;
+  return (
+    <>
+      <CategoryTable />
+    </>
+  );
 };
 
 export default CategoryPage;

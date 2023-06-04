@@ -1,4 +1,4 @@
-import { current } from "@reduxjs/toolkit";
+///api user
 import axios from "../utils/axios-customize";
 
 export const callRegister = (fullName, email, password, phone) => {
@@ -33,5 +33,30 @@ export const callBulkCreateUser = (data) => {
 
 export const callUpdateUser = (id, fullName, phone) => {
     return axios.put('/api/v1/user/update', { id, fullName, phone });
+}
+
+export const callDeleteUser = (id) => {
+    return axios.delete(`/api/v1/user/delete/${id}`);
+}
+
+//api category
+
+export const callCreateACategory = (name) => {
+    return axios.post('/api/v1/category/create-new-category', { name });
+}
+
+
+export const callFetchListCategory = (query) => {
+    //return axios.get(`/api/v1/get-all-paginate?current=${current}&pageSize=${pageSize}`)
+    return axios.get(`/api/v1/category/get-all-paginate?${query}`)
+}
+
+export const callDeleteCategory = (id) => {
+    return axios.delete(`/api/v1/category/delete/${id}`);
+}
+
+
+export const callUpdateCategory = (name) => {
+    return axios.put('/api/v1/category/update', { name });
 }
 

@@ -9,23 +9,25 @@ import {
 } from "antd";
 import InputSearch from "./InputSearch";
 import { useEffect, useState } from "react";
-import { callDeleteUser, callFetchListUser } from "../../../services/api";
-import UserViewDetail from "./UserViewDetail";
 import {
-  CloudUploadOutlined,
+  callDeleteCategory,
+  callFetchListCategory,
+} from "../../../services/api";
+import CategoryViewDetail from "./CategoryViewDetail";
+import {
   DeleteTwoTone,
   EditTwoTone,
   ExportOutlined,
   PlusOutlined,
   ReloadOutlined,
 } from "@ant-design/icons";
-import ModalCreateNewUser from "./ModalCreateNewUser";
-import UserImport from "./data/UserImport";
+import ModalCreateNewCategory from "./ModalCreateNewCategory";
 import * as XLSX from "xlsx";
-import UserModalUpdate from "./UserModalUpdate";
+import CategoryModalUpdate from "./CategoryModalUpdate";
+import moment from "moment";
 
-const TableUser = (props) => {
-  const [listUser, setListUser] = useState([]);
+const TableCategory = (props) => {
+  const [listCategory, setlistCategory] = useState([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(4);
   const [total, setTotal] = useState(0);
@@ -40,10 +42,10 @@ const TableUser = (props) => {
   const [dataUpdate, setDataUpadte] = useState("");
 
   useEffect(() => {
-    fetchUser();
+    fetchCategory();
   }, [current, pageSize, filter, sortQuery]);
 
-  const fetchUser = async () => {
+  const fetchCategory = async () => {
     setIsLoading(true);
     let query = `current=${current}&pageSize=${pageSize}`;
     if (filter) {
@@ -54,9 +56,9 @@ const TableUser = (props) => {
       query += `&${sortQuery}`;
     }
     // const query = `current=${current}&pageSize=${pageSize}`;
-    const res = await callFetchListUser(query);
+    const res = await callFetchListCategory(query);
     if (res && res.data) {
-      setListUser(res.data.result);
+      setlistCategory(res.data.result);
       setTotal(res.data.meta.total);
     }
     setIsLoading(false);
@@ -81,19 +83,25 @@ const TableUser = (props) => {
       },
     },
     {
-      title: "Tên hiển thị",
-      dataIndex: "fullName",
+      title: "Tên danh mục",
+      dataIndex: "name",
       sorter: true,
     },
     {
-      title: "Email",
-      dataIndex: "email",
+      title: "Ngày tạo",
+      dataIndex: "createAt",
       sorter: true,
+      render: (text, record) => {
+        return moment(text).format("DD-MM-YYYY hh:mm:ss");
+      },
     },
     {
-      title: "Số điện thoại",
-      dataIndex: "phone",
+      title: "Ngày cập nhật",
+      dataIndex: "updatedAt",
       sorter: true,
+      render: (text, record) => {
+        return moment(text).format("DD-MM-YYYY hh:mm:ss");
+      },
     },
     {
       title: "Action",
@@ -102,8 +110,8 @@ const TableUser = (props) => {
           <>
             <Popconfirm
               placement="leftTop"
-              title={"Xác nhận xoá user"}
-              description={"Bạn có chắc chắn muốn xoá user này ?"}
+              title={"Xác nhận xoá danh mục"}
+              description={"Bạn có chắc chắn muốn xoá danh mục này ?"}
               onConfirm={() => handleDeleteUser(record.id)}
               okText={"Xác nhận"}
               cancelText={"Huỷ"}
@@ -126,11 +134,11 @@ const TableUser = (props) => {
     },
   ];
 
-  const handleDeleteUser = async (userId) => {
-    const res = await callDeleteUser(userId);
+  const handleDeleteUser = async (categoryId) => {
+    const res = await callDeleteCategory(categoryId);
     if (res && res.data) {
-      message.success("Xoá user thành công");
-      fetchUser();
+      message.success("Xoá danh mục thành công");
+      fetchCategory();
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
@@ -162,20 +170,17 @@ const TableUser = (props) => {
   };
 
   const handleExportData = () => {
-    if (listUser.length > 0) {
-      const worksheet = XLSX.utils.json_to_sheet(listUser);
+    if (listCategory.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(listCategory);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-      XLSX.writeFile(workbook, "ExportUser.csv");
+      XLSX.writeFile(workbook, "ExportCategory.csv");
     }
-  };
-  const handleImportData = () => {
-    setOpenModalImport(true);
   };
   const renderHeader = () => {
     return (
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span>Table List Users</span>
+        <span>Table List Categories</span>
         <span style={{ display: "flex", gap: 15 }}>
           <Button
             icon={<ExportOutlined />}
@@ -183,13 +188,6 @@ const TableUser = (props) => {
             onClick={() => handleExportData()}
           >
             Export
-          </Button>
-          <Button
-            icon={<CloudUploadOutlined />}
-            type="primary"
-            onClick={() => handleImportData()}
-          >
-            Import
           </Button>
           <Button
             icon={<PlusOutlined />}
@@ -224,7 +222,7 @@ const TableUser = (props) => {
             loading={isLoading}
             className="def"
             columns={columns}
-            dataSource={listUser}
+            dataSource={listCategory}
             onChange={onChange}
             rowKey={"id"}
             pagination={{
@@ -243,33 +241,27 @@ const TableUser = (props) => {
           />
         </Col>
       </Row>
-      <UserViewDetail
+      <CategoryViewDetail
         openViewDetail={openViewDetail}
         setOpenViewDetail={setOpenViewDetail}
         dataViewDetail={dataViewDetail}
         setDataViewDetail={setDataViewDetail}
       />
-      <ModalCreateNewUser
+      <ModalCreateNewCategory
         openModalCreate={openModalCreate}
         setOpenModalCreate={setOpenModalCreate}
-        fetchUser={fetchUser}
+        fetchCategory={fetchCategory}
       />
 
-      <UserImport
-        openModalImport={openModalImport}
-        setOpenModalImport={setOpenModalImport}
-        fetchUser={fetchUser}
-      />
-
-      <UserModalUpdate
+      <CategoryModalUpdate
         openModalUpdate={openModalUpdate}
         setOpenModalUpdate={setOpenModalUpdate}
         dataUpdate={dataUpdate}
-        fetchUser={fetchUser}
+        fetchCategory={fetchCategory}
         setDataUpadte={setDataUpadte}
       />
     </>
   );
 };
 
-export default TableUser;
+export default TableCategory;
