@@ -1,18 +1,32 @@
-import { Col, Row, Table, Button } from "antd";
+import {
+  Col,
+  Row,
+  Table,
+  Button,
+  Popconfirm,
+  message,
+  notification,
+} from "antd";
 import InputSearch from "./InputSearch";
 import { useEffect, useState } from "react";
-import { callFetchListUser } from "../../../services/api";
+import { callDeleteProduct, callFetchListProduct } from "../../../services/api";
 import ProductViewDetail from "./ProductViewDetail";
 import {
   CloudUploadOutlined,
+  DeleteTwoTone,
+  EditTwoTone,
   ExportOutlined,
   PlusOutlined,
   ReloadOutlined,
 } from "@ant-design/icons";
 import ModalCreateNewProduct from "./ModalCreateNewProduct";
+import ProductImport from "./data/ProductImport";
+import * as XLSX from "xlsx";
+import ProductModalUpdate from "./ProductModalUpdate";
+import moment from "moment";
 
-const ProductTable = (props) => {
-  const [listUser, setListUser] = useState([]);
+const TableProduct = (props) => {
+  const [listProduct, setlistProduct] = useState([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(4);
   const [total, setTotal] = useState(0);
@@ -22,12 +36,15 @@ const ProductTable = (props) => {
   const [dataViewDetail, setDataViewDetail] = useState("");
   const [openViewDetail, setOpenViewDetail] = useState(false);
   const [openModalCreate, setOpenModalCreate] = useState(false);
+  const [openModalImport, setOpenModalImport] = useState(false);
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [dataUpdate, setDataUpadte] = useState("");
 
   useEffect(() => {
-    fetchUser();
+    fetchProduct();
   }, [current, pageSize, filter, sortQuery]);
 
-  const fetchUser = async () => {
+  const fetchProduct = async () => {
     setIsLoading(true);
     let query = `current=${current}&pageSize=${pageSize}`;
     if (filter) {
@@ -38,9 +55,9 @@ const ProductTable = (props) => {
       query += `&${sortQuery}`;
     }
     // const query = `current=${current}&pageSize=${pageSize}`;
-    const res = await callFetchListUser(query);
+    const res = await callFetchListProduct(query);
     if (res && res.data) {
-      setListUser(res.data.result);
+      setlistProduct(res.data.result);
       setTotal(res.data.meta.total);
     }
     setIsLoading(false);
@@ -65,48 +82,76 @@ const ProductTable = (props) => {
       },
     },
     {
-      title: "Tên danh mục",
-      dataIndex: "fullName",
+      title: "category id",
+      dataIndex: "category_id",
       sorter: true,
     },
     {
       title: "Tên sản phẩm",
-      dataIndex: "fullName",
+      dataIndex: "title",
       sorter: true,
     },
     {
       title: "Giá",
-      dataIndex: "email",
+      dataIndex: "price",
       sorter: true,
     },
     {
       title: "Giá đã giảm",
-      dataIndex: "phone",
+      dataIndex: "discount",
       sorter: true,
     },
     {
       title: "Mô tả",
-      dataIndex: "phone",
+      dataIndex: "createdAt",
       sorter: true,
+      render: (text, record) => {
+        return moment(text).format("DD-MM-YYYY hh:mm:ss");
+      },
     },
     {
       title: "Action",
       render: (text, record, index) => {
         return (
           <>
-            <Button
-              type="primary"
-              style={{ margin: "6px" }}
-              onClick={() => fetchUser()}
+            <Popconfirm
+              placement="leftTop"
+              title={"Xác nhận xoá user"}
+              description={"Bạn có chắc chắn muốn xoá user này ?"}
+              onConfirm={() => handleDeleteProduct(record.id)}
+              okText={"Xác nhận"}
+              cancelText={"Huỷ"}
             >
-              Delete
-            </Button>
-            <Button type="primary">Edit</Button>
+              <span style={{ cursor: "pointer", margin: "0 20px" }}>
+                <DeleteTwoTone twoToneColor={"#ff4d4f"} />
+              </span>
+            </Popconfirm>
+            <EditTwoTone
+              twoToneColor={"#f57800"}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setOpenModalUpdate(true);
+                setDataUpadte(record);
+              }}
+            />
           </>
         );
       },
     },
   ];
+
+  const handleDeleteProduct = async (productId) => {
+    const res = await callDeleteProduct(productId);
+    if (res && res.data) {
+      message.success("Xoá product thành công");
+      fetchProduct();
+    } else {
+      notification.error({
+        message: "Có lỗi xảy ra",
+        description: res.message,
+      });
+    }
+  };
 
   const onChange = (pagination, filters, sorter, extra) => {
     if (pagination && pagination.current !== current) {
@@ -131,15 +176,20 @@ const ProductTable = (props) => {
   };
 
   const handleExportData = () => {
-    alert("hihi");
+    if (listProduct.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(listProduct);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+      XLSX.writeFile(workbook, "ExportUser.csv");
+    }
   };
   const handleImportData = () => {
-    alert("hihi");
+    setOpenModalImport(true);
   };
   const renderHeader = () => {
     return (
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span>Bảng danh sách sản phẩm</span>
+        <span>Table List Product</span>
         <span style={{ display: "flex", gap: 15 }}>
           <Button
             icon={<ExportOutlined />}
@@ -188,7 +238,7 @@ const ProductTable = (props) => {
             loading={isLoading}
             className="def"
             columns={columns}
-            dataSource={listUser}
+            dataSource={listProduct}
             onChange={onChange}
             rowKey={"id"}
             pagination={{
@@ -216,10 +266,24 @@ const ProductTable = (props) => {
       <ModalCreateNewProduct
         openModalCreate={openModalCreate}
         setOpenModalCreate={setOpenModalCreate}
-        fetchUser={fetchUser}
+        fetchProduct={fetchProduct}
+      />
+
+      <ProductImport
+        openModalImport={openModalImport}
+        setOpenModalImport={setOpenModalImport}
+        fetchProduct={fetchProduct}
+      />
+
+      <ProductModalUpdate
+        openModalUpdate={openModalUpdate}
+        setOpenModalUpdate={setOpenModalUpdate}
+        dataUpdate={dataUpdate}
+        fetchProduct={fetchProduct}
+        setDataUpadte={setDataUpadte}
       />
     </>
   );
 };
 
-export default ProductTable;
+export default TableProduct;

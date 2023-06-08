@@ -39,12 +39,19 @@ export const callDeleteUser = (id) => {
     return axios.delete(`/api/v1/user/delete/${id}`);
 }
 
+
+
 //api category
 
 export const callCreateACategory = (name) => {
     return axios.post('/api/v1/category/create-new-category', { name });
 }
 
+
+export const callFetchCategory = () => {
+    //return axios.get(`/api/v1/get-all-paginate?current=${current}&pageSize=${pageSize}`)
+    return axios.get(`/api/v1/category/get-all`)
+}
 
 export const callFetchListCategory = (query) => {
     //return axios.get(`/api/v1/get-all-paginate?current=${current}&pageSize=${pageSize}`)
@@ -58,5 +65,35 @@ export const callDeleteCategory = (id) => {
 
 export const callUpdateCategory = (name) => {
     return axios.put('/api/v1/category/update', { name });
+}
+
+
+
+//api product
+export const callCreateAProduct = (category_id, title, price, discount, description, image) => {
+    const data = new FormData();
+    data.append('category_id', category_id);
+    data.append('title', title);
+    data.append('price', price);
+    data.append('discount', discount);
+    data.append('description', description);
+    data.append('image', image);
+    return axios.post('/api/v1/product/create-new-product', data);
+}
+
+export const callFetchListProduct = (query) => {
+    return axios.get(`/api/v1/product/get-all-paginate?${query}`)
+}
+
+export const callDeleteProduct = (id) => {
+    return axios.delete(`/api/v1/product/delete/${id}`);
+}
+
+export const callUpdateProduct = (name) => {
+    return axios.put('/api/v1/product/update', { name });
+}
+
+export const callFetchProductById = (id) => {
+    return axios.get(`/api/v1/detail-product/${id}`);
 }
 

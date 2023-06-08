@@ -19,8 +19,6 @@ const RegisterPage = () => {
     const { fullName, email, password, phone } = values;
     setIsLoading(true);
     const res = await callRegister(fullName, email, password, phone);
-    console.log("check res: ", res.message);
-    console.log("check res: ", res);
     setIsLoading(false);
     if (res?.data?._id) {
       message.success("Đăng ký tài khoản thành công!");

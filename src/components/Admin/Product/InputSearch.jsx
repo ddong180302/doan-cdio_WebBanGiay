@@ -8,16 +8,16 @@ const InputSearch = (props) => {
   const onFinish = (values) => {
     let query = "";
     //build query
-    if (values.fullName) {
-      query += `&fullName=${values.fullName}`;
+    if (values.product_id) {
+      query += `&product_id=${values.product_id}`;
     }
 
-    if (values.email) {
-      query += `&email=${values.email}`;
+    if (values.title) {
+      query += `&title=${values.title}`;
     }
 
-    if (values.phone) {
-      query += `&phone=${values.phone}`;
+    if (values.price) {
+      query += `&price=${values.price}`;
     }
 
     if (query) {
@@ -35,8 +35,8 @@ const InputSearch = (props) => {
         <Col span={8}>
           <Form.Item
             labelCol={{ span: 24 }}
-            name={`fullName`}
-            label={`Tên danh mục`}
+            name={`product_id`}
+            label={`Mã danh mục`}
           >
             <Input />
           </Form.Item>
@@ -44,14 +44,14 @@ const InputSearch = (props) => {
         <Col span={8}>
           <Form.Item
             labelCol={{ span: 24 }}
-            name={`email`}
+            name={`title`}
             label={`Tên sản phẩm`}
           >
             <Input />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item labelCol={{ span: 24 }} name={`phone`} label={`Giá`}>
+          <Form.Item labelCol={{ span: 24 }} name={`price`} label={`Giá`}>
             <Input />
           </Form.Item>
         </Col>

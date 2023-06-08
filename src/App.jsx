@@ -23,6 +23,7 @@ import ProtectedRouteStaff from "./components/ProtectedRoute/ProtectedRouteStaff
 import ProductPage from "./pages/product";
 import OrderPage from "./pages/order";
 import LayoutUser from "./components/User/LayoutUser";
+import ProductDetail from "./pages/product_detail";
 
 const Layout = () => {
   return (
@@ -59,7 +60,13 @@ export default function App() {
       path: "/",
       element: <Layout />,
       errorElement: <NotFound />,
-      children: [{ index: true, element: <Home /> }],
+      children: [
+        { index: true, element: <Home /> },
+        {
+          path: "product/:slug",
+          element: <ProductDetail />,
+        },
+      ],
     },
     {
       path: "/admin",
