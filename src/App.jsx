@@ -24,6 +24,7 @@ import ProductPage from "./pages/product";
 import OrderPage from "./pages/order";
 import LayoutUser from "./components/User/LayoutUser";
 import ProductDetail from "./pages/product_detail";
+import "./styles/global.scss";
 
 const Layout = () => {
   return (
