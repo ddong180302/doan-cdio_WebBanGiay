@@ -26,7 +26,7 @@ import ProductModalUpdate from "./ProductModalUpdate";
 import moment from "moment";
 
 const TableProduct = (props) => {
-  const [listProduct, setlistProduct] = useState([]);
+  const [listProduct, setListProduct] = useState([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(4);
   const [total, setTotal] = useState(0);
@@ -57,7 +57,7 @@ const TableProduct = (props) => {
     // const query = `current=${current}&pageSize=${pageSize}`;
     const res = await callFetchListProduct(query);
     if (res && res.data) {
-      setlistProduct(res.data.result);
+      setListProduct(res.data.result);
       setTotal(res.data.meta.total);
     }
     setIsLoading(false);
@@ -82,28 +82,39 @@ const TableProduct = (props) => {
       },
     },
     {
-      title: "category id",
+      title: "Category",
       dataIndex: "category_id",
       sorter: true,
     },
     {
       title: "Tên sản phẩm",
-      dataIndex: "title",
+      dataIndex: "name",
       sorter: true,
     },
     {
       title: "Giá",
       dataIndex: "price",
       sorter: true,
+      render: (text, record) => {
+        return Number(text).toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        });
+      },
     },
     {
-      title: "Giá đã giảm",
-      dataIndex: "discount",
+      title: "Số lượng",
+      dataIndex: "quantity",
       sorter: true,
     },
     {
-      title: "Mô tả",
-      dataIndex: "createdAt",
+      title: "Đã bán",
+      dataIndex: "sold",
+      sorter: true,
+    },
+    {
+      title: "Ngày cập nhật",
+      dataIndex: "updatedAt",
       sorter: true,
       render: (text, record) => {
         return moment(text).format("DD-MM-YYYY hh:mm:ss");

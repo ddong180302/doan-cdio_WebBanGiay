@@ -1,5 +1,5 @@
 const Footer = () => {
-  return <>Footer</>;
+  return <>Đồ án Cdio</>;
 };
 
 export default Footer;

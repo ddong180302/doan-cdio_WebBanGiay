@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
+  LoadingOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import {
   Col,
   Divider,
-  Form,
   Input,
   InputNumber,
   message,
@@ -10,16 +14,27 @@ import {
   notification,
   Row,
   Select,
+  Upload,
+  Button,
+  Form,
 } from "antd";
 import { callCreateAProduct, callFetchCategory } from "../../../services/api";
 const ModalCreateNewProduct = (props) => {
+  const [loadingSlider, setLoadingSlider] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { openModalCreate, setOpenModalCreate } = props;
   const [isSubmit, setIsSubmit] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
 
   const [listCategory, setListCategory] = useState([]);
   const [form] = Form.useForm();
-  const [image, setImage] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
 
+  const [dataThumbnail, setDataThumbnail] = useState([]);
+  const [dataSlider, setDataSlider] = useState([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
   useEffect(() => {
     const fetchCategory = async () => {
       const res = await callFetchCategory();
@@ -34,31 +49,37 @@ const ModalCreateNewProduct = (props) => {
   }, []);
 
   const onFinish = async (values) => {
-    const {
-      category_id,
-      title,
-      price,
-      discount,
-      description,
-      [image]: value,
-    } = values;
-    console.log(
-      "chekc value: ",
-      category_id,
-      title,
-      price,
-      discount,
-      description,
-      [image]
-    );
+    if (dataThumbnail.length === 0) {
+      notification.error({
+        message: "Lỗi upload",
+        description: "Vui lòng upload ảnh thumbnail",
+      });
+      return;
+    }
+
+    if (dataSlider.length === 0) {
+      notification.error({
+        message: "Lỗi update",
+        description: "Vui lòng upload ảnh slider",
+      });
+      return;
+    }
+    const { category_id, name, price, quantity, sold } = values;
+    const thumbnail = dataThumbnail[0].file;
+    console.log("check data slider: ", dataSlider);
+
+    const slider = dataSlider.map((item) => item.file);
+    //console.log("check data thumbnail: ", thumbnail);
+    console.log("check data slider: ", slider);
     setIsSubmit(true);
     const res = await callCreateAProduct(
       category_id,
-      title,
+      name,
       price,
-      discount,
-      description,
-      image
+      quantity,
+      sold,
+      thumbnail,
+      slider
     );
     if (res && res.data) {
       message.success("Tạo mới sản phẩm thành công");
@@ -74,10 +95,84 @@ const ModalCreateNewProduct = (props) => {
     setIsSubmit(false);
   };
 
-  const handleChangeFile = (event) => {
-    if (event.target && event.target.files && event.target.files[0]) {
-      setImage(event.target.files[0]);
+  ///upload
+  const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => callback(reader.result));
+    reader.readAsDataURL(img);
+  };
+
+  const beforeUpload = (file) => {
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG file!");
     }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error("Image must smaller than 2MB!");
+    }
+    return isJpgOrPng && isLt2M;
+  };
+
+  const handleChange = (info, type) => {
+    if (info.file.status === "uploading") {
+      type ? setLoadingSlider(true) : setLoading(true);
+      return;
+    }
+    if (info.file.status === "done") {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, (url) => {
+        type ? setLoadingSlider(false) : setLoading(false);
+        setImageUrl(url);
+      });
+    }
+  };
+
+  const handleUploadFileThumbnail = async ({ file, onSuccess, onError }) => {
+    // const res = await callUploadBookImg(file);
+    // console.log("check file: ", file);
+    setDataThumbnail([
+      {
+        file: file,
+        uid: file.uid,
+      },
+    ]);
+    onSuccess("ok");
+  };
+
+  const handleUploadFileSlider = async ({ file, onSuccess, onError }) => {
+    //const res = await callUploadBookImg(file);
+    // console.log("check file: ", file);
+
+    //copy previous state => upload multiple images
+    setDataSlider((dataSlider) => [
+      ...dataSlider,
+      {
+        file: file,
+        uid: file.uid,
+      },
+    ]);
+    onSuccess("ok");
+  };
+
+  const handleRemoveFile = (file, type) => {
+    if (type === "thumbnail") {
+      setDataThumbnail([]);
+    }
+    if (type === "slider") {
+      const newSlider = dataSlider.filter((x) => x.uid !== file.uid);
+      setDataSlider(newSlider);
+    }
+  };
+
+  const handlePreview = async (file) => {
+    getBase64(file.originFileObj, (url) => {
+      setPreviewImage(url);
+      setPreviewOpen(true);
+      setPreviewTitle(
+        file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+      );
+    });
   };
   return (
     <>
@@ -87,7 +182,12 @@ const ModalCreateNewProduct = (props) => {
         onOk={() => {
           form.submit();
         }}
-        onCancel={() => setOpenModalCreate(false)}
+        onCancel={() => {
+          setOpenModalCreate(false);
+          props.fetchProduct();
+          form.resetFields();
+          setIsSubmit(false);
+        }}
         okText={"Tạo mới"}
         cancelText={"Hủy"}
         confirmLoading={isSubmit}
@@ -97,8 +197,8 @@ const ModalCreateNewProduct = (props) => {
         <Divider />
 
         <Form form={form} name="basic" onFinish={onFinish} autoComplete="off">
-          <Row gutter={15}>
-            <Col span={6}>
+          <Row gutter={12}>
+            <Col span={12}>
               <Form.Item
                 labelCol={{ span: 24 }}
                 label="Loại giày"
@@ -110,11 +210,11 @@ const ModalCreateNewProduct = (props) => {
                 <Select showSearch allowClear options={listCategory} />
               </Form.Item>
             </Col>
-            <Col span={24}>
+            <Col span={12}>
               <Form.Item
                 labelCol={{ span: 24 }}
                 label="Tên giày"
-                name="title"
+                name="name"
                 rules={[
                   { required: true, message: "Vui lòng nhập tên hiển thị!" },
                 ]}
@@ -122,7 +222,7 @@ const ModalCreateNewProduct = (props) => {
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col span={12}>
               <Form.Item
                 labelCol={{ span: 24 }}
                 label="Giá tiền"
@@ -142,24 +242,6 @@ const ModalCreateNewProduct = (props) => {
             <Col span={6}>
               <Form.Item
                 labelCol={{ span: 24 }}
-                label="Giá tiền đã giảm"
-                name="discount"
-                rules={[{ required: true, message: "Vui lòng nhập giá tiền!" }]}
-              >
-                <InputNumber
-                  min={0}
-                  style={{ width: "100%" }}
-                  formatter={(value) =>
-                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  }
-                  addonAfter="VND"
-                />
-              </Form.Item>
-            </Col>
-
-            <Col span={18}>
-              <Form.Item
-                labelCol={{ span: 24 }}
                 label="Số lượng"
                 name="quantity"
                 rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
@@ -167,25 +249,68 @@ const ModalCreateNewProduct = (props) => {
                 <InputNumber min={1} style={{ width: "100%" }} />
               </Form.Item>
             </Col>
+            <Col span={6}>
+              <Form.Item
+                labelCol={{ span: 24 }}
+                label="Đã bán"
+                name="sold"
+                rules={[
+                  { required: true, message: "Vui lòng nhập số lượng đã bán!" },
+                ]}
+                initialValue={0}
+              >
+                <InputNumber
+                  min={0}
+                  //defaultValue={0}
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </Col>
             <Col span={24}>
               <Form.Item
                 labelCol={{ span: 24 }}
-                label="Mô tả"
-                name="description"
-                rules={[
-                  { required: true, message: "Vui lòng nhập tên hiển thị!" },
-                ]}
+                label="Ảnh Thumbnail"
+                name="thumbnail"
               >
-                <Input />
+                <Upload
+                  name="thumbnail"
+                  listType="picture-card"
+                  className="avatar-uploader"
+                  maxCount={1}
+                  multiple={false}
+                  customRequest={handleUploadFileThumbnail}
+                  beforeUpload={beforeUpload}
+                  onChange={handleChange}
+                  onRemove={(file) => handleRemoveFile(file, "thumbnail")}
+                  onPreview={handlePreview}
+                >
+                  <div>
+                    {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                </Upload>
               </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name={image} label="Upload" valuePropName="filelist">
-                <input
-                  type="file"
-                  className="form-control"
-                  onChange={(event) => handleChangeFile(event)}
-                />
+              <Form.Item
+                labelCol={{ span: 24 }}
+                label="Ảnh Slider"
+                name="slider"
+              >
+                <Upload
+                  multiple
+                  name="slider"
+                  listType="picture-card"
+                  className="avatar-uploader"
+                  customRequest={handleUploadFileSlider}
+                  beforeUpload={beforeUpload}
+                  onChange={(info) => handleChange(info, "slider")}
+                  onRemove={(file) => handleRemoveFile(file, "slider")}
+                  onPreview={handlePreview}
+                >
+                  <div>
+                    {loadingSlider ? <LoadingOutlined /> : <PlusOutlined />}
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                </Upload>
               </Form.Item>
             </Col>
           </Row>

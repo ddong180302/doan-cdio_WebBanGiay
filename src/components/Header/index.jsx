@@ -19,7 +19,7 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const carts = useSelector((state) => state.order.carts);
-
+  console.log("coi cart: ", carts);
   const handleLogout = async () => {
     const res = await callLogout();
     if (res && res.data) {
@@ -58,6 +58,7 @@ const Header = () => {
   }
 
   const urlAvatar = `${`data:image/jpeg;base64,${user?.avatar}`}`;
+  console.log("use: ", user);
   const contentPopover = () => {
     return (
       <div className="pop-cart-body">
@@ -65,20 +66,22 @@ const Header = () => {
           {carts?.map((product, index) => {
             return (
               <div className="product" key={`product-${index}`}>
-                <img src="https://picsum.photos/id/1015/250/150" />
-                <div>{product?.detail?.name}</div>
+                <img
+                  src={`data:image/jpeg;base64,${product?.detail?.thumbnail}`}
+                />
+                <div className="name">{product?.detail?.name}</div>
                 <div className="price">
                   {new Intl.NumberFormat("vi-VN", {
                     style: "currency",
                     currency: "VND",
-                  }).format(7676)}
+                  }).format(product?.detail?.price)}
                 </div>
               </div>
             );
           })}
         </div>
         <div className="pop-cart-footer">
-          <button>Xem giỏ hàng</button>
+          <button onClick={() => navigate("/order")}>Xem giỏ hàng</button>
         </div>
       </div>
     );

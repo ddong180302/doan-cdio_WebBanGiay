@@ -25,6 +25,8 @@ import OrderPage from "./pages/order";
 import LayoutUser from "./components/User/LayoutUser";
 import ProductDetail from "./pages/product_detail";
 import "./styles/global.scss";
+import OrderProduct from "./pages/order_product";
+import HistoryPage from "./pages/history";
 
 const Layout = () => {
   return (
@@ -66,6 +68,14 @@ export default function App() {
         {
           path: "product/:slug",
           element: <ProductDetail />,
+        },
+        {
+          path: "order",
+          element: <OrderProduct />,
+        },
+        {
+          path: "history",
+          element: <HistoryPage />,
         },
       ],
     },

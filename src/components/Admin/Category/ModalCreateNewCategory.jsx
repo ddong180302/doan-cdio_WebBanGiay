@@ -22,7 +22,7 @@ const ModalCreateNewCategory = (props) => {
       message.success("Tạo mới thành công!");
       form.resetFields();
       setOpenModalCreate(false);
-      await props.fetchUser();
+      await props.fetchCategory();
     } else {
       notification.error({
         message: "Có lỗi xảy ra",

@@ -23,6 +23,7 @@ import ModalCreateNewUser from "./ModalCreateNewUser";
 import UserImport from "./data/UserImport";
 import * as XLSX from "xlsx";
 import UserModalUpdate from "./UserModalUpdate";
+import moment from "moment";
 
 const TableUser = (props) => {
   const [listUser, setListUser] = useState([]);
@@ -94,6 +95,14 @@ const TableUser = (props) => {
       title: "Số điện thoại",
       dataIndex: "phone",
       sorter: true,
+    },
+    {
+      title: "Ngày cập nhật",
+      dataIndex: "updatedAt",
+      sorter: true,
+      render: (text, record) => {
+        return moment(text).format("DD-MM-YYYY hh:mm:ss");
+      },
     },
     {
       title: "Action",

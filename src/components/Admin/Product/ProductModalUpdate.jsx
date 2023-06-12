@@ -1,18 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Divider, Form, Modal, message, notification, Input } from "antd";
+import {
+  Divider,
+  Form,
+  Modal,
+  message,
+  notification,
+  Input,
+  InputNumber,
+} from "antd";
 import { callUpdateProduct } from "../../../services/api";
 
 const ProductModalUpdate = (props) => {
   const [form] = Form.useForm();
-  const { openModalUpdate, setOpenModalUpdate, dataUpdate } = props;
+  const { openModalUpdate, setOpenModalUpdate, dataUpdate, setDataUpdate } =
+    props;
   const [isSubmit, setIsSubmit] = useState(false);
+  const [thumbnail, setThumbnail] = useState("");
   const onFinish = async (values) => {
-    const { name } = values;
+    const { id, name, price, quantity, [thumbnail]: value } = values;
+    console.log("chưkc : ", name, price, quantity, thumbnail);
     setIsSubmit(true);
-    const res = await callUpdateProduct(name);
+    const res = await callUpdateProduct(id, name, price, quantity, thumbnail);
+    console.log(res);
     if (res && res.data) {
-      message.success("Cập nhật danh mục thành công");
+      message.success("Cập nhật sản phẩm thành công");
       setOpenModalUpdate(false);
+      setDataUpdate("");
+      form.resetFields();
       await props.fetchUser();
     } else {
       notification.error({
@@ -27,17 +41,22 @@ const ProductModalUpdate = (props) => {
     form.setFieldsValue(dataUpdate);
   }, [dataUpdate]);
 
+  const handleChangeFile = (event) => {
+    if (event.target && event.target.files && event.target.files[0]) {
+      setThumbnail(event.target.files[0]);
+    }
+  };
   return (
     <>
       <Modal
-        title="Cập nhật danh mục"
+        title="Cập nhật sản phẩm"
         open={openModalUpdate}
         onOk={() => {
           form.submit();
         }}
         onCancel={() => {
           setOpenModalUpdate(false);
-          //setDataUpdate(null);
+          setIsSubmit(false);
         }}
         okText={"Cập nhật"}
         cancelText={"Huỷ"}
@@ -57,11 +76,42 @@ const ProductModalUpdate = (props) => {
           </Form.Item>
           <Form.Item
             labelCol={{ span: 24 }}
-            label="Tên danh mục"
+            label="Tên sản phẩm"
             name="name"
-            rules={[{ required: true, message: "Vui lòng nhập tên danh mục!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm!" }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            labelCol={{ span: 24 }}
+            label="Giá tiền"
+            name="price"
+            rules={[{ required: true, message: "Vui lòng nhập giá tiền!" }]}
+          >
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              addonAfter="VND"
+            />
+          </Form.Item>
+          <Form.Item
+            labelCol={{ span: 24 }}
+            label="Số lượng"
+            name="quantity"
+            rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+          >
+            <InputNumber min={1} style={{ width: "100%" }} />
+          </Form.Item>
+
+          <Form.Item name={thumbnail} label="Upload" valuePropName="filelist">
+            <input
+              type="file"
+              className="form-control"
+              onChange={(event) => handleChangeFile(event)}
+            />
           </Form.Item>
         </Form>
       </Modal>

@@ -6,12 +6,16 @@ import ModalGallery from "./ModalGallery";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { BsCartPlus } from "react-icons/bs";
 import ProductLoader from "./ProductLoader";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { doAddProductAction } from "../../redux/order/orderSlice";
+import { useNavigate } from "react-router-dom";
 
 const ViewDetail = (props) => {
+  const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
+  const nagivate = useNavigate();
   const { dataProduct } = props;
+  console.log("dataProduct", dataProduct);
   const dispatch = useDispatch();
-  console.log("dataProduct: >>>>", dataProduct);
   const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -20,7 +24,6 @@ const ViewDetail = (props) => {
   const refGallery = useRef(null);
 
   const images = dataProduct?.items ?? [];
-  console.log("check image: ", images);
 
   const handleOnClickImage = () => {
     //get current index onClick
@@ -46,14 +49,19 @@ const ViewDetail = (props) => {
   };
 
   const handleChangeInput = (value) => {
+    //console.log(value);
     if (!isNaN(value)) {
-      if (+value > 0 && +value < +dataProduct.quantity) {
+      console.log(value);
+
+      if (+value > 0 && +value < +dataProduct.dataProduct.quantity) {
         setCurrentQuantity(+value);
       }
     }
   };
 
   const handleAddToCart = (quantity, product) => {
+    console.log("product", product);
+    console.log("quantity", quantity);
     dispatch(
       doAddProductAction({
         quantity,
@@ -111,7 +119,7 @@ const ViewDetail = (props) => {
                     Thương Hiệu:{" "}
                     <a href="#">{dataProduct.dataProduct.category_id}</a>{" "}
                   </div>
-                  <div className="title">{dataProduct.dataProduct.title}</div>
+                  <div className="title">{dataProduct.dataProduct.name}</div>
                   <div className="rating">
                     <Rate
                       value={5}
@@ -120,7 +128,7 @@ const ViewDetail = (props) => {
                     />
                     <span className="sold">
                       <Divider type="vertical" />
-                      Đã bán 6969
+                      Đã bán {dataProduct.dataProduct.sold}
                     </span>
                   </div>
                   <div className="price">
@@ -158,8 +166,11 @@ const ViewDetail = (props) => {
                   <div className="buy">
                     <button
                       className="cart"
-                      onClick={() =>
-                        handleAddToCart(currentQuantity, dataProduct)
+                      //{isAuthenticated === true ? }
+                      onClick={
+                        isAuthenticated === true
+                          ? () => handleAddToCart(currentQuantity, dataProduct)
+                          : () => nagivate("/login")
                       }
                     >
                       <BsCartPlus className="icon-cart" />

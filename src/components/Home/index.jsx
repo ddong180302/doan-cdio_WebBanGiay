@@ -22,7 +22,7 @@ const Home = () => {
   const [listCategory, setListCategory] = useState([]);
   const [listProduct, setListProduct] = useState([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -102,12 +102,12 @@ const Home = () => {
   };
   const items = [
     {
-      key: "order=updatedAt DESC",
+      key: "order=sold DESC",
       label: `Phổ biến`,
       children: <></>,
     },
     {
-      key: "order=updatedAt ASC",
+      key: "order=updatedAt DESC",
       label: `Hàng Mới`,
       children: <></>,
     },
@@ -166,7 +166,7 @@ const Home = () => {
     return str;
   };
   const handleRedirectProduct = (product) => {
-    const slug = convertSlug(product.title);
+    const slug = convertSlug(product.name);
     navigate(`/product/${slug}?id=${product.id}`);
   };
   return (
@@ -326,12 +326,12 @@ const Home = () => {
                         <div className="wrapper">
                           <div className="thumbnail">
                             <img
-                              src={`${`data:image/jpeg;base64,${item?.image}`}`}
+                              src={`${`data:image/jpeg;base64,${item?.thumbnail}`}`}
                               alt="thumbnail product"
                             />
                           </div>
-                          <div className="text" title={item.title}>
-                            {item.title}
+                          <div className="text" title={item.name}>
+                            {item.name}
                           </div>
                           <div className="price">
                             {new Intl.NumberFormat("vi-VN", {
@@ -345,7 +345,7 @@ const Home = () => {
                               disabled
                               style={{ color: "#ffce3d", fontSize: 10 }}
                             />
-                            <span>Đã bán 1k</span>
+                            <span>Đã bán {item.sold}</span>
                           </div>
                         </div>
                       </div>

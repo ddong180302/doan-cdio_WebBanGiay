@@ -43,7 +43,10 @@ const ModalCreateNewUser = (props) => {
         onOk={() => {
           form.submit();
         }}
-        onCancel={() => setOpenModalCreate(false)}
+        onCancel={() => {
+          setOpenModalCreate(false);
+          form.resetFields();
+        }}
         okText={"Tạo mới"}
         cancelText={"Huỷ"}
         confirmLoading={isSubmit}

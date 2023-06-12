@@ -9,7 +9,6 @@ const ProductDetail = () => {
 
   let params = new URLSearchParams(location.search);
   const id = params?.get("id");
-  console.log(id);
 
   useEffect(() => {
     fetchProduct(id);
@@ -19,21 +18,18 @@ const ProductDetail = () => {
     const res = await callFetchProductById(id);
     if (res && res.data) {
       let raw = res.data;
-      console.log(raw);
       raw.items = getImages(raw);
 
       setDataProduct(raw);
-      console.log("raw:", raw);
     }
   };
 
   const getImages = (raw) => {
-    console.log("raw?.dataGalery?.image", raw?.dataGalery);
     const images = [];
-    if (raw?.dataProduct?.image) {
+    if (raw?.dataProduct?.thumbnail) {
       images.push({
-        original: `${`data:image/jpeg;base64,${raw?.dataProduct?.image}`}`,
-        thumbnail: `${`data:image/jpeg;base64,${raw?.dataProduct?.image}`}`,
+        original: `${`data:image/jpeg;base64,${raw?.dataProduct?.thumbnail}`}`,
+        thumbnail: `${`data:image/jpeg;base64,${raw?.dataProduct?.thumbnail}`}`,
         originalClass: "original-image",
         thumbnailClass: "thumbnail-image",
         originalWidth: 450,
@@ -42,10 +38,9 @@ const ProductDetail = () => {
     }
     if (raw?.dataGalery) {
       raw?.dataGalery?.map((item) => {
-        console.log("chekc imte: ", item);
         images.push({
-          original: `${`data:image/jpeg;base64,${item.image}`}`,
-          thumbnail: `${`data:image/jpeg;base64,${item.image}`}`,
+          original: `${`data:image/jpeg;base64,${item.thumbnail}`}`,
+          thumbnail: `${`data:image/jpeg;base64,${item.thumbnail}`}`,
           originalClass: "original-image",
           thumbnailClass: "thumbnail-image",
         });
@@ -53,7 +48,6 @@ const ProductDetail = () => {
     }
     return images;
   };
-  console.log("check data: ", dataProduct);
   return (
     <>
       <ViewDetail dataProduct={dataProduct} />
