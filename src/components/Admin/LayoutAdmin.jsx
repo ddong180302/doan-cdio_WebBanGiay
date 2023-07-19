@@ -9,6 +9,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DownOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Dropdown, Space, message } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -22,41 +23,29 @@ const { Content, Footer, Sider } = Layout;
 
 const items = [
   {
-    label: <Link to="/admin">Dashboard</Link>,
-    key: "dashboard",
-    icon: <AppstoreOutlined />,
-  },
-  {
-    label: <span>Manage Users</span>,
-    // key: "user",
+    label: <Link to="/admin/user">Quản lý người dùng</Link>,
+    key: "user",
     icon: <UserOutlined />,
-    children: [
-      {
-        label: <Link to="/admin/user">CRUD</Link>,
-        key: "crud",
-        icon: <TeamOutlined />,
-      },
-      {
-        label: "Files1",
-        key: "file1",
-        icon: <TeamOutlined />,
-      },
-    ],
   },
   {
-    label: <Link to="/admin/category">Manage Categories</Link>,
+    label: <Link to="/admin/category">Quản lý danh mục</Link>,
     key: "category",
     icon: <ExceptionOutlined />,
   },
   {
-    label: <Link to="/admin/product">Manage product</Link>,
+    label: <Link to="/admin/product">Quản lý sản phẩm</Link>,
     key: "product",
     icon: <ExceptionOutlined />,
   },
   {
-    label: <Link to="/admin/order">Manage Orders</Link>,
+    label: <Link to="/admin/order">Quản lý đơn hàng</Link>,
     key: "order",
     icon: <DollarCircleOutlined />,
+  },
+  {
+    label: <Link to="/">Trang Chủ</Link>,
+    key: "",
+    icon: <HomeOutlined />,
   },
 ];
 

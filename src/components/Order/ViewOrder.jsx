@@ -91,31 +91,35 @@ const ViewOrder = (props) => {
           )}
         </Col>
         <Col md={6} xs={24}>
-          <div className="order-sum">
-            <div className="calculate">
-              <span>Tạm tính</span>
-              <span>
-                {new Intl.NumberFormat("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                }).format(totalPrice || 0)}
-              </span>
+          {carts.length === 0 ? (
+            <></>
+          ) : (
+            <div className="order-sum">
+              <div className="calculate">
+                <span>Tạm tính</span>
+                <span>
+                  {new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  }).format(totalPrice || 0)}
+                </span>
+              </div>
+              <Divider style={{ margin: "10px 0" }} />
+              <div className="calculate">
+                <span>Tổng tiền</span>
+                <span className="sum-final">
+                  {new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  }).format(totalPrice || 0)}
+                </span>
+              </div>
+              <Divider style={{ margin: "10px 0" }} />
+              <button onClick={() => props.setCurrentStep(1)}>
+                Mua Hàng ({carts?.length ?? 0})
+              </button>
             </div>
-            <Divider style={{ margin: "10px 0" }} />
-            <div className="calculate">
-              <span>Tổng tiền</span>
-              <span className="sum-final">
-                {new Intl.NumberFormat("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                }).format(totalPrice || 0)}
-              </span>
-            </div>
-            <Divider style={{ margin: "10px 0" }} />
-            <button onClick={() => props.setCurrentStep(1)}>
-              Mua Hàng ({carts?.length ?? 0})
-            </button>
-          </div>
+          )}
         </Col>
       </Row>
     </div>

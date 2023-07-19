@@ -32,6 +32,7 @@ const Home = () => {
   useEffect(() => {
     const initCategory = async () => {
       const res = await callFetchCategory();
+      console.log("check cate: ", res);
       if (res && res.data) {
         const d = res.data.map((item) => {
           return { label: item.name, value: item.id };

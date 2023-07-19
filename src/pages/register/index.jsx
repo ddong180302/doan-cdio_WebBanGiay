@@ -17,6 +17,7 @@ const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const onFinish = async (values) => {
     const { fullName, email, password, phone } = values;
+    console.log(fullName, email, password, phone);
     setIsLoading(true);
     const res = await callRegister(fullName, email, password, phone);
     setIsLoading(false);

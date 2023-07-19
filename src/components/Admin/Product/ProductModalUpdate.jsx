@@ -17,10 +17,10 @@ const ProductModalUpdate = (props) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [thumbnail, setThumbnail] = useState("");
   const onFinish = async (values) => {
-    const { id, name, price, quantity, [thumbnail]: value } = values;
-    console.log("chưkc : ", name, price, quantity, thumbnail);
+    const { id, name, price, quantity } = values;
+    console.log("ch: ", name, price, quantity);
     setIsSubmit(true);
-    const res = await callUpdateProduct(id, name, price, quantity, thumbnail);
+    const res = await callUpdateProduct(id, name, price, quantity);
     console.log(res);
     if (res && res.data) {
       message.success("Cập nhật sản phẩm thành công");

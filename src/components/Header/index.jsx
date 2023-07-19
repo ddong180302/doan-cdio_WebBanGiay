@@ -101,7 +101,7 @@ const Header = () => {
               ☰
             </div>
             <div className="page-header__logo">
-              <span className="logo">
+              <span className="logo" onClick={() => navigate("/")}>
                 <FaReact className="rotate icon-react" /> Đồ Án Cdio
                 <VscSearchFuzzy className="icon-search" />
               </span>

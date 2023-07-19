@@ -20,7 +20,7 @@ const ProductViewDetail = (props) => {
         open={openViewDetail}
         width="50vw"
       >
-        <Descriptions title="Thông tin Book" bordered column={2}>
+        <Descriptions title="Thông tin Sản Phẩm" bordered column={2}>
           <Descriptions.Item label="Id">{dataViewDetail?.id}</Descriptions.Item>
           <Descriptions.Item label="Category Id">
             {dataViewDetail?.category_id}
@@ -54,14 +54,14 @@ const ProductViewDetail = (props) => {
             {moment(dataViewDetail?.updatedAt).format("DD-MM-YYYY hh:mm:ss")}
           </Descriptions.Item>
         </Descriptions>
-        <Divider orientation="left"> Ảnh Books </Divider>
+        <Divider orientation="left"> Ảnh Sản Phẩm </Divider>
         <Image
           width={200}
-          src={`${`data:image/jpeg;base64,${dataViewDetail?.image}`}`}
+          src={`${`data:image/jpeg;base64,${dataViewDetail?.thumbnail}`}`}
           placeholder={
             <Image
               preview={false}
-              src={`${`data:image/jpeg;base64,${dataViewDetail?.image}`}`}
+              src={`${`data:image/jpeg;base64,${dataViewDetail?.thumbnail}`}`}
               width={200}
             />
           }

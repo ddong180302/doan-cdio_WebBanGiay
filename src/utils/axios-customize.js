@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const baseURL = import.meta.env.VITE_BACKEND_URL
 
 const instance = axios.create({
@@ -8,8 +7,9 @@ const instance = axios.create({
 });
 
 instance.defaults.headers.common = { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-
+console.log("check lỗi: ", instance.defaults.headers.common);
 const handleRefreshToken = async () => {
+    console.log("check lỗi");
     const res = await instance.get("/api/v1/auth/refresh");
     if (res && res.data) return res.data.access_token;
     else null;

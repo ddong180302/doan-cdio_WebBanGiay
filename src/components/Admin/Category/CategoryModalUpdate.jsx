@@ -8,13 +8,13 @@ const CategoryModalUpdate = (props) => {
     props;
   const [isSubmit, setIsSubmit] = useState(false);
   const onFinish = async (values) => {
-    const { name } = values;
+    const { id, name } = values;
     setIsSubmit(true);
-    const res = await callUpdateCategory(name);
+    const res = await callUpdateCategory(id, name);
     if (res && res.data) {
       message.success("Cập nhật danh mục thành công");
       setOpenModalUpdate(false);
-      await props.fetchUser();
+      await props.fetchCategory();
     } else {
       notification.error({
         message: "Đã có lỗi xảy ra",

@@ -18,7 +18,11 @@ import {
   Button,
   Form,
 } from "antd";
-import { callCreateAProduct, callFetchCategory } from "../../../services/api";
+import {
+  callCreateAProduct,
+  callFetchCategory,
+  createNewGallery,
+} from "../../../services/api";
 const ModalCreateNewProduct = (props) => {
   const [loadingSlider, setLoadingSlider] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,15 +82,23 @@ const ModalCreateNewProduct = (props) => {
       price,
       quantity,
       sold,
-      thumbnail,
-      slider
+      thumbnail
     );
+    console.log(res);
     if (res && res.data) {
-      message.success("Tạo mới sản phẩm thành công");
-      form.resetFields();
-      setOpenModalCreate(false);
-      await props.fetchProduct();
-    } else {
+      const product_id = res.data.product_id;
+      await createNewGallery(product_id, slider);
+      if (res && res.data) {
+        message.success("Tạo mới sản phẩm thành công");
+        form.resetFields();
+        setOpenModalCreate(false);
+        await props.fetchProduct();
+      } else {
+        notification.error({
+          message: "Đã có lỗi xảy ra",
+          description: res.message,
+        });
+      }
       notification.error({
         message: "Đã có lỗi xảy ra",
         description: res.message,

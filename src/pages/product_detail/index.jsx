@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import ViewDetail from "../../components/Product/viewDetail";
+import ViewDetail from "../../components/Product/ViewDetail";
 import { useEffect, useState } from "react";
 import { callFetchProductById } from "../../services/api";
 
@@ -19,12 +19,12 @@ const ProductDetail = () => {
     if (res && res.data) {
       let raw = res.data;
       raw.items = getImages(raw);
-
       setDataProduct(raw);
     }
   };
 
   const getImages = (raw) => {
+    console.log("check raw: ", raw.dataGallery);
     const images = [];
     if (raw?.dataProduct?.thumbnail) {
       images.push({
@@ -36,11 +36,11 @@ const ProductDetail = () => {
         originalHeight: 450,
       });
     }
-    if (raw?.dataGalery) {
-      raw?.dataGalery?.map((item) => {
+    if (raw?.dataGallery) {
+      raw?.dataGallery?.map((item) => {
         images.push({
-          original: `${`data:image/jpeg;base64,${item.thumbnail}`}`,
-          thumbnail: `${`data:image/jpeg;base64,${item.thumbnail}`}`,
+          original: `${`data:image/jpeg;base64,${item.image}`}`,
+          thumbnail: `${`data:image/jpeg;base64,${item.image}`}`,
           originalClass: "original-image",
           thumbnailClass: "thumbnail-image",
         });

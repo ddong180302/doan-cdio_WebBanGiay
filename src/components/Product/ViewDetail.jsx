@@ -191,7 +191,7 @@ const ViewDetail = (props) => {
         setIsOpen={setIsOpenModalGallery}
         currentIndex={currentIndex}
         items={images}
-        title={"hardcode"}
+        title={"Image gallery"}
       />
     </div>
   );
